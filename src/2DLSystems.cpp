@@ -1,10 +1,11 @@
 //
 // Created by joren on 1/04/2018.
 //
+
 #include "../headers/2DLSystems.h"
 
 
-img::EasyImage DrawLines(const Lines2D &lines, const int size) {
+img::EasyImage ParseLines(const Lines2D &lines, const int size) {
 
     // Variables
     int x_min = INT32_MAX,
@@ -73,4 +74,14 @@ img::EasyImage DrawLines(const Lines2D &lines, const int size) {
 
     // Add dx and dy to all coordinates.
 }
-//std::list<Line2D>
+
+
+LParser::LSystem2D *ParseL2D(const string &pathToL2D) {
+    filebuf buffer;
+    if (buffer.open(pathToL2D, ios::in)) {
+        istream l2d (&buffer);
+        LParser::LSystem2D *result = new LParser::LSystem2D (l2d);
+        return result;
+    }
+    return NULL;
+}

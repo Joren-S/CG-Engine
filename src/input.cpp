@@ -35,11 +35,13 @@ ImageType ImageInfo::StrToIT(string config_line) const {
 }
 
 ColorRGB* ImageInfo::DoubleToRGB(vector<double> *rgb_as_doubles) {
+    /* [0-1] -> [0-255]
+     * */
     ColorRGB *rgb = new ColorRGB();
     if (rgb_as_doubles != NULL) {
-        rgb->r = rgb_as_doubles->at(0) * 255;
-        rgb->g = rgb_as_doubles->at(1) * 255;
-        rgb->b = rgb_as_doubles->at(2) * 255;
+        rgb->r = round(rgb_as_doubles->at(0) * 255);
+        rgb->g = round(rgb_as_doubles->at(1) * 255);
+        rgb->b = round(rgb_as_doubles->at(2) * 255);
     }
     return rgb;
 }

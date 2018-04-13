@@ -6,6 +6,7 @@
 #define ENGINE_INPUT_H
 
 #include <iostream>
+#include <cmath>
 #include "../ini_configuration/ini_configuration.h"
 
 #include "types.h"

@@ -21,16 +21,32 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
     // Read in our ini file.
     ImageInfo *info = new ImageInfo(configuration);
 
+    // 2D L-Systemen
+    if (info->getType() == LSys2D) {
+        LS2D_Properties *ls2d_prop = info->getLS2DProperties();
 
-    // Write to file.
-    std::ofstream fout("out.bmp", std::ios::binary);
-    fout << image;
-    fout.close();
+        // ISSUE vv
+        LParser::LSystem2D *ls2d = ParseL2D(ls2d_prop->pathToFile);
+
+        cout << "-----" << endl;
+        cout << ls2d << endl;
+        cout << "Initiator: " << ls2d->get_initiator() << endl;
+        cout << "Angle: " << ls2d->get_angle() << endl;
+        cout << "Starting Angle: " << ls2d->get_starting_angle() << endl;
+        cout << "Iterations: " << ls2d->get_nr_iterations() << endl;
+    }
+
+
+    // Write to file. - if needed
+    //std::ofstream fout("out.bmp", std::ios::binary);
+    //fout << image;
+    //fout.close();
 
     // Cleanup and return result.
     delete info;
 	return image;
 }
+
 
 // Do not change.
 
@@ -38,7 +54,7 @@ int main(int argc, char const* argv[])
 {
     /* testing */
     argc = 2;
-    argv[1] = "../examples/intro1_ColorRectangle.ini";
+    argv[1] = "../examples/ls2d/l_systems005.ini";
     /* end */
     int retVal = 0;
     try
