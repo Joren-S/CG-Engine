@@ -5,19 +5,32 @@
 #ifndef ENGINE_INPUT_H
 #define ENGINE_INPUT_H
 
+#include <iostream>
 #include "../ini_configuration/ini_configuration.h"
 
-enum ImageType { Default };
+#include "types.h"
+#include "2DLSystems.h"
 
-struct ImageProperties {
-    double width, height;
+using namespace std;
+
+enum ImageType { Invalid, LSys2D };
+
+struct LS2D_Properties {
+    string pathToFile;
+    ColorRGB *color;
 };
+
+
 
 class ImageInfo {
 
 private:
     ImageType type;
-    ImageProperties *properties;
+    int size;
+    ColorRGB *bg_color;
+
+    // LS - 2D
+    LS2D_Properties *ls2dProperties;
 
 public:
     ImageInfo(const ini::Configuration &config);
@@ -25,10 +38,26 @@ public:
     // Getters and setters
 
     ImageType getType() const;
-    ImageProperties *getProperties() const;
 
     void setType(ImageType type);
-    void setProperties(ImageProperties *properties);
+
+    int getSize() const;
+
+    void setSize(int size);
+
+    ColorRGB *getBGColor() const;
+
+    void setBGColor(ColorRGB *bgc);
+
+    LS2D_Properties *getLS2DProperties() const;
+
+    void setLS2DProperties(LS2D_Properties *prop);
+
+    // Help functions
+
+    ImageType StrToIT(string config_line) const;
+
+    ColorRGB *DoubleToRGB(vector<double> *rgb_as_doubles);
 };
 
 

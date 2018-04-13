@@ -6,30 +6,9 @@
 #define ENGINE_2DLSYSTEMS_H
 
 #include <list>
+#include "types.h"
 #include "../easy_image/easy_image.h"
 
-
-class ColorRGB {
-public:
-    double r, g, b;
-};
-
-class ColorRGBA {
-public:
-    double r, g, b, a;
-};
-
-class Point2D {
-public:
-    double x, y;
-};
-
-class Line2D {
-public:
-    Point2D *start;
-    Point2D *end;
-    ColorRGB *color;
-};
 
 typedef std::list<Line2D*> Lines2D;
 

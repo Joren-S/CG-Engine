@@ -5,30 +5,29 @@
 #include "headers/2DLSystems.h"
 
 #include <fstream>
-#include <iostream>
-#include <stdexcept>
-#include <string>
 #include <cmath>
-#include <list>
-
 
 
 img::EasyImage generate_image(const ini::Configuration &configuration)
 {
+    // img::EasyImage image(width, height);
+    // image (i, j)  :  Coord (i, j), i being width, j being height.
+    //       * .red
+
+    // Vars
+    double width, height;
+    img::EasyImage image(width, height);
+
+    // Read in our ini file.
     ImageInfo *info = new ImageInfo(configuration);
-    img::EasyImage image(round(info->getProperties()->width), round(info->getProperties()->height));
-    for(unsigned int i = 0; i < image.get_height(); i++) {
 
-        for (unsigned int j = 0; j < image.get_width(); j++) {
 
-            image(i, j).red = i;
-            image(i, j).green = j;
-            image(i, j).blue = (i + j) % 256;
-        }
-    }
+    // Write to file.
     std::ofstream fout("out.bmp", std::ios::binary);
     fout << image;
     fout.close();
+
+    // Cleanup and return result.
     delete info;
 	return image;
 }
