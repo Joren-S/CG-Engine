@@ -4,43 +4,28 @@
 #include "headers/input.h"
 #include "headers/2DLSystems.h"
 
-#include <fstream>
-#include <cmath>
-
 
 img::EasyImage generate_image(const ini::Configuration &configuration)
 {
-    // img::EasyImage image(width, height);
-    // image (i, j)  :  Coord (i, j), i being width, j being height.
-    //       * .red
-
     // Vars
-    double width, height;
-    img::EasyImage image(width, height);
+    img::EasyImage image;
 
     // Read in our ini file.
     ImageInfo *info = new ImageInfo(configuration);
 
+
     // 2D L-Systemen
     if (info->getType() == LSys2D) {
-        LS2D_Properties *ls2d_prop = info->getLS2DProperties();
 
-        // ISSUE vv
-        LParser::LSystem2D *ls2d = ParseL2D(ls2d_prop->pathToFile);
-
-        cout << "-----" << endl;
-        cout << ls2d << endl;
-        cout << "Initiator: " << ls2d->get_initiator() << endl;
-        cout << "Angle: " << ls2d->get_angle() << endl;
-        cout << "Starting Angle: " << ls2d->get_starting_angle() << endl;
-        cout << "Iterations: " << ls2d->get_nr_iterations() << endl;
+        LSystem2D LS2D = LSystem2D(info->getLS2DProperties()->pathToFile, info);
+        image = LS2D.GenerateImage();
     }
 
 
     // Write to file. - if needed
-    //std::ofstream fout("out.bmp", std::ios::binary);
-    //fout << image;
-    //fout.close();
+    std::ofstream fout("out.bmp", std::ios::binary);
+    fout << image;
+    fout.close();
 
     // Cleanup and return result.
     delete info;
@@ -50,11 +35,16 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
 
 // Do not change.
 
+/*
+ * DO NOT FORGET:
+ * REMOVE HARDCODED PATHS
+ * */
+
 int main(int argc, char const* argv[])
 {
     /* testing */
     argc = 2;
-    argv[1] = "../examples/ls2d/l_systems005.ini";
+    argv[1] = "../examples/ls2d/l_systemsTEST.ini";
     /* end */
     int retVal = 0;
     try

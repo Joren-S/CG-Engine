@@ -7,10 +7,9 @@
 
 #include <iostream>
 #include <cmath>
-#include "../ini_configuration/ini_configuration.h"
 
+#include "../ini_configuration/ini_configuration.h"
 #include "types.h"
-#include "2DLSystems.h"
 
 using namespace std;
 

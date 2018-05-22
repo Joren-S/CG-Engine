@@ -1,7 +1,7 @@
 //
 // Created by Joren on 23/03/2018.
 //
-#include <iostream>
+
 
 #include "../headers/input.h"
 
@@ -37,7 +37,7 @@ ImageType ImageInfo::StrToIT(string config_line) const {
 ColorRGB* ImageInfo::DoubleToRGB(vector<double> *rgb_as_doubles) {
     /* [0-1] -> [0-255]
      * */
-    ColorRGB *rgb = new ColorRGB();
+    ColorRGB *rgb = new ColorRGB(0,0,0);
     if (rgb_as_doubles != NULL) {
         rgb->r = round(rgb_as_doubles->at(0) * 255);
         rgb->g = round(rgb_as_doubles->at(1) * 255);
@@ -79,3 +79,4 @@ LS2D_Properties* ImageInfo::getLS2DProperties() const {
 void ImageInfo::setLS2DProperties(LS2D_Properties *prop) {
     ImageInfo::ls2dProperties = prop;
 }
+

@@ -10,5 +10,5 @@ add_executable(Engine engine.cc
         l_parser/l_parser.h l_parser/l_parser.cc
         easy_image/easy_image.h easy_image/easy_image.cc
         ini_configuration/ini_configuration.h ini_configuration/ini_configuration.cc
-        headers/input.h headers/2DLSystems.h
-        src/input.cpp src/2DLSystems.cpp headers/types.h)
+        headers/input.h headers/2DLSystems.h headers/types.h
+        src/input.cpp src/2DLSystems.cpp )
