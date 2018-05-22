@@ -40,7 +40,7 @@ public:
      * @param pathToL2D : Path to the L2D file.
      * @param imgInfo : ImageInfo object containing specifications for the LSystem.
      */
-    LSystem2D(const std::string &pathToL2D, const ImageInfo *imgInfo);
+    LSystem2D(const ImageInfo *imgInfo);
 
     /**
      * Processes the L-System and determines the lines that need to be drawn.

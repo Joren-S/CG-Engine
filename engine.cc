@@ -1,3 +1,5 @@
+#include <ctime>
+
 #include "easy_image/easy_image.h"
 #include "ini_configuration/ini_configuration.h"
 
@@ -8,6 +10,7 @@
 img::EasyImage generate_image(const ini::Configuration &configuration)
 {
     // Vars
+    int start_time = clock();
     img::EasyImage image;
 
     // Read in our ini file.
@@ -17,7 +20,7 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
     // 2D L-Systemen
     if (info->getType() == LSys2D) {
 
-        LSystem2D LS2D = LSystem2D(info->getLS2DProperties()->pathToFile, info);
+        LSystem2D LS2D = LSystem2D(info);
         image = LS2D.GenerateImage();
     }
 
@@ -26,6 +29,11 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
     std::ofstream fout("out.bmp", std::ios::binary);
     fout << image;
     fout.close();
+
+    // Display runtime
+    int elapsed_time_ms = (clock() - start_time) / double(CLOCKS_PER_SEC) * 1000;
+    cout << "RUNTIME: \n" << elapsed_time_ms << " milliseconds" << endl;
+
 
     // Cleanup and return result.
     delete info;

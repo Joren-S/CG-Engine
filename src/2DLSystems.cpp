@@ -8,11 +8,11 @@ using namespace std;
 
 // Primary functions
 
-LSystem2D::LSystem2D(const string &pathToL2D, const ImageInfo *imgInfo) {
+LSystem2D::LSystem2D(const ImageInfo *imgInfo) {
     // Setup variables.
     filebuf buffer;
     stringstream path;
-    path << "../examples/ls2d/" << pathToL2D;
+    path << "../examples/ls2d/" << imgInfo->getLS2DProperties()->pathToFile;
 
     // Default values are NULL.
     info = NULL;
