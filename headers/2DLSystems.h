@@ -1,5 +1,5 @@
 //
-// Created by joren on 1/04/2018.
+// Created by joren on 21/04/2018.
 //
 
 #ifndef ENGINE_2DLSYSTEMS_H
@@ -19,6 +19,7 @@
 #include "../l_parser/l_parser.h"
 
 // authored
+#include "2DLineDrawings.h"
 #include "types.h"
 #include "input.h"
 
@@ -37,7 +38,6 @@ private:
 public:
     /**
      * Constructor, parses the L2D file and stores the result in ls2d.
-     * @param pathToL2D : Path to the L2D file.
      * @param imgInfo : ImageInfo object containing specifications for the LSystem.
      */
     LSystem2D(const ImageInfo *imgInfo);
@@ -47,13 +47,6 @@ public:
      * @return : List of 2D lines that need to be drawn.
      */
     LinesList2D ProcessLSystem();
-
-    /**
-     * Converts a list of 2D Lines into an EasyImage with specifications from 'info'.
-     * @param lines : list of 2D lines that need to be drawn
-     * @return : resulting EasyImage
-     */
-    img::EasyImage LinesToImage(const LinesList2D &lines);
 
     /**
      * Processes the L-system and generates an EasyImage.

@@ -5,6 +5,7 @@
 
 #include "headers/input.h"
 #include "headers/2DLSystems.h"
+#include "headers/3DLineDrawings.h"
 
 
 img::EasyImage generate_image(const ini::Configuration &configuration)
@@ -24,6 +25,11 @@ img::EasyImage generate_image(const ini::Configuration &configuration)
         image = LS2D.GenerateImage();
     }
 
+    if (info->getType() == LDraw3D) {
+
+        LineDrawing3D LD3D = LineDrawing3D(info);
+        image = LD3D.GenerateImage();
+    }
 
     // Write to file. - if needed
     std::ofstream fout("out.bmp", std::ios::binary);
@@ -52,7 +58,9 @@ int main(int argc, char const* argv[])
 {
     /* testing */
     argc = 2;
-    argv[1] = "../examples/ls2d/l_systemsTEST.ini";
+    argv[1] = "../examples/ld3d/line_drawings001.ini";
+    //argv[1] = "../examples/ls2d/l_systems006.ini";
+
     /* end */
     int retVal = 0;
     try

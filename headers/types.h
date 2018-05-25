@@ -71,6 +71,12 @@ public:
         end = new Point2D(x_end, y_end);
         ColorRGB(255, 255, 255);
     }
+
+    Line2D(Point2D *_start, Point2D *_end) {
+        start = _start;
+        end = _end;
+        ColorRGB(255, 255, 255);
+    }
 };
 
 class Line3D {
@@ -84,6 +90,12 @@ public:
         end = new Point3D(x_end, y_end, z_end);
         ColorRGB(255, 255, 255);
     }
+
+    Line3D(Point3D *_start, Point3D *_end) {
+        start = _start;
+        end = _end;
+        ColorRGB(255, 255, 255);
+    }
 };
 
 // typedefs
@@ -91,8 +103,6 @@ public:
 typedef unsigned int uint;
 typedef std::list<Line2D*> LinesList2D;
 typedef std::list<Line3D*> LinesList3D;
-typedef std::list<Point2D*> PointsList2D;
-typedef std::list<Point3D*> PointsList3D;
 
 
 #endif //ENGINE_TYPES_H
