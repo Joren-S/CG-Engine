@@ -158,6 +158,14 @@ namespace LParser
 			 */
 			unsigned int get_nr_iterations() const;
 
+
+            /**
+             * \brief Returns the probabilty of a replacement rule in the L-System.
+             *
+             * \return the probability
+             */
+            double get_probability(char c) const;
+
 		protected:
 		        /**
 		         * \brief the alphabet of the l-system
@@ -179,10 +187,15 @@ namespace LParser
 		         */
 			double angle;
 
-		        /**
-		         * \brief the replacement rules of the l-system
-		         */
+			/**
+			 * \brief the replacement rules of the l-system
+			 */
 			std::map<char, std::string> replacementrules;
+
+			/**
+			 * \brief the probability of the replacement rule of the l-system
+			 */
+			std::map<char, double> replacementprobabilities;
 
 		        /**
 		         * \brief the number of replacements of the l-system

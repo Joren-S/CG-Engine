@@ -12,6 +12,12 @@ Rules = {
         F -> "F"
 }
 
+Rules = {
+        L -> "+RF-LFL-FR+",
+        R -> "-LF+RFR+FL-",
+        F -> "F"
+}
+
 Initiator     = "L"
 Angle         = 90
 StartingAngle = 0

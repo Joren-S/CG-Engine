@@ -94,7 +94,6 @@ LinesList2D LSystem2D::ProcessLSystem() {
     return result;
 }
 
-
 img::EasyImage LSystem2D::GenerateImage() {
     // Process system
     LinesList2D Lines = ProcessLSystem();
@@ -142,8 +141,27 @@ string LSystem2D::buildRule(string curRule, int curIteration) {
         if (curChar != '+' and curChar != '-' and curChar != '(' and curChar != ')') {
             // if char in alphabet
             if (isInAlphabet(curChar)) {
-                // append replacement
-                buf << lsys->get_replacement(curChar);
+
+                // Decide if something is drawn based on probability
+                /*
+                 rand() return value in range [0, RAND_MAX].
+                 Divide this value by RAND_MAX for a random number between 0 and 1.
+                 Next, check if lower than our given probability.
+
+                 we want 0 to always return false:
+                 <p and not <=p
+                 we want 1.0 to always return true:
+                 divide by RAND_MAX / 1 instead of just RAND_MAX.
+                 */
+                bool doDraw = rand() / (RAND_MAX + 1.0) < lsys->get_probability(curChar);
+
+                // append replacement if needed
+                if (doDraw) {
+                    buf << lsys->get_replacement(curChar);
+                }
+                else {
+                    buf << curChar;
+                }
             }
                 // if not in alphabet, return empty string.
             else {

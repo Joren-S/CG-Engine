@@ -125,6 +125,13 @@ namespace
 					value += c;
 				return value;
 			}
+			std::string readUnquotedString()
+			{
+				std::string value("");
+				for (std::istream::int_type c = getChar(); c != ' '; c = getChar())
+                    value += c;
+				return value;
+			}
 
 			int readInt()
 			{
@@ -342,7 +349,7 @@ namespace
 		}
 		return num_parenthesis == 0;
 	}
-	void parse_rules(std::set<char> const& alphabet, std::map<char, std::string>& rules, stream_parser& parser, bool parse2D)
+	void parse_rules(std::set<char> const& alphabet, std::map<char, std::string>& rules, std::map<char, double>& probabilities, stream_parser& parser, bool parse2D)
 	{
 		parser.skip_comments_and_whitespace();
 		parser.assertChars("Rules");
@@ -352,23 +359,53 @@ namespace
 		parser.assertChars("{");
 		parser.skip_comments_and_whitespace();
 		rules.clear();
-		char c = parser.getChar();
+
+		std::string rule_init = parser.readUnquotedString();
+		char c = rule_init.at(0);
 		while (true)
 		{
 			if (!std::isalpha(c))
 				throw LParser::ParserException("Invalid Alphabet character", parser.getLine(), parser.getCol());
 			if (alphabet.find(c) == alphabet.end())
-				throw LParser::ParserException(std::string("Replacement rule specified for char '") + c + "' which is not part of the alphabet. ", parser.getLine(), parser.getCol());
+				throw LParser::ParserException(std::string("Replacement rule specified for char '") + c +
+											   "' which is not part of the alphabet. ", parser.getLine(),
+											   parser.getCol());
 			if (rules.find(c) != rules.end())
-				throw LParser::ParserException(std::string("Double entry '") + c + "' in rules specification ", parser.getLine(), parser.getCol());
+				throw LParser::ParserException(std::string("Double entry '") + c + "' in rules specification ",
+											   parser.getLine(), parser.getCol());
 			char alphabet_char = c;
+
+			// Support for stochastic grammars : c(double)
+            double probabilty = 1;
+			if (rule_init.length() > 1) {
+
+				bool bracket_found = false;
+				std::string probablity_str("");
+				for (std::string::iterator itr = rule_init.begin(); itr != rule_init.end(); ++itr) {
+
+                    if (*itr == ')') {
+                        break;
+                    }
+					else if (bracket_found) {
+						probablity_str += *itr;
+					}
+					else if (*itr == '(') {
+						bracket_found = true;
+					}
+				}
+				probabilty = atof(probablity_str.c_str());
+			}
+
 			parser.skip_comments_and_whitespace();
 			parser.assertChars("->");
 			parser.skip_comments_and_whitespace();
 			std::string rule = parser.readQuotedString();
 			if (!isValidRule(alphabet, rule, parse2D))
-				throw LParser::ParserException(std::string("Invalid rule specification for entry '") + alphabet_char + "' in rule specification", parser.getLine(), parser.getCol());
+				throw LParser::ParserException(
+						std::string("Invalid rule specification for entry '") + alphabet_char +
+						"' in rule specification", parser.getLine(), parser.getCol());
 			rules[alphabet_char] = rule;
+            probabilities[alphabet_char] = probabilty;
 			parser.skip_comments_and_whitespace();
 			c = parser.getChar();
 			if (c == '}')
@@ -376,7 +413,9 @@ namespace
 			else if (c != ',')
 				throw LParser::ParserException("Expected ','", parser.getLine(), parser.getCol());
 			parser.skip_comments_and_whitespace();
-			c = parser.getChar();
+
+            rule_init = parser.readUnquotedString();
+			c = rule_init.at(0);
 		}
 	}
 	std::string parse_initiator(std::set<char> const& alphabet, stream_parser& parser, bool parse2D)
@@ -488,6 +527,11 @@ std::string const& LParser::LSystem::get_replacement(char c) const
 	assert(get_alphabet().find(c) != get_alphabet().end());
 	return replacementrules.find(c)->second;
 }
+double LParser::LSystem::get_probability(char c) const
+{
+    assert(get_alphabet().find(c) != get_alphabet().end());
+    return replacementprobabilities.find(c)->second;
+}
 double LParser::LSystem::get_angle() const
 {
 	return angle;
@@ -540,7 +584,7 @@ std::istream& LParser::operator>>(std::istream& in, LParser::LSystem2D& system)
 	stream_parser parser(in);
 	parse_alphabet(system.alphabet, parser);
 	parse_draw(system.alphabet, system.drawfunction, parser);
-	parse_rules(system.alphabet, system.replacementrules, parser, true);
+	parse_rules(system.alphabet, system.replacementrules, system.replacementprobabilities, parser, true);
 	system.initiator = parse_initiator(system.alphabet, parser, true);
 	system.angle = parse_angle(parser, "Angle");
 	system.startingAngle = parse_angle(parser, "StartingAngle");
@@ -560,7 +604,7 @@ std::istream& LParser::operator>>(std::istream&in, LParser::LSystem3D& system)
 	stream_parser parser(in);
 	parse_alphabet(system.alphabet, parser);
 	parse_draw(system.alphabet, system.drawfunction, parser);
-	parse_rules(system.alphabet, system.replacementrules, parser, false);
+	parse_rules(system.alphabet, system.replacementrules, system.replacementprobabilities, parser, false);
 	system.initiator = parse_initiator(system.alphabet, parser, false);
 	system.angle = parse_angle(parser, "Angle");
 

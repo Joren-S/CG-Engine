@@ -51,7 +51,7 @@ private:
     // LD3D
     Point3D *eye;
     int nrFigures;
-    vector<LD3D_Properties*> ld3DProperties;
+    vector<LD3D_Properties*> ld3DProperties; // Figures, basically
 
 public:
     ImageInfo(const ini::Configuration &config);
