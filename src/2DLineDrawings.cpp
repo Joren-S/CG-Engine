@@ -73,6 +73,14 @@ img::EasyImage LineDrawing2D::LinesToImage(const LinesList2D &lines) {
     // Scaling factor (d)
     double d = 0.95 * (image_x / x_range);
 
+    // Add padding if it's a single horizontal/vertical line.
+    if (image_x == 0) {
+        image_x += 3;
+    }
+    if (image_y == 0) {
+        image_y += 3;
+    }
+
     // multiply coordinates of all points with d
     for (LinesList2D::const_iterator itr = lines.begin(); itr != lines.end(); ++itr) {
         Line2D *curLine = *itr;
