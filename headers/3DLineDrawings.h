@@ -22,9 +22,13 @@
 // authored
 #include "types.h"
 #include "input.h"
+#include "2DLineDrawings.h"
 
 class LineDrawing3D {
 private:
+    /**
+     * ImageInfo object containing all information from input file.
+     */
     const ImageInfo *info;
 
 public:
@@ -36,36 +40,75 @@ public:
     LineDrawing3D(const ImageInfo *imgInfo);
 
     /**
-     * Rotates and translates all the points in a figure so the eye is the new origin.
-     * ECS = Eye-Coordinate System.
-     * @param figure_id : id of the figure.
+     * Create a matrix for scaling figures.
+     * @param scale : scale factor
+     * @return : new matrix
      */
-    void PointsToECS(int figure_id = 0);
+    Matrix scaleFigure(const double scale);
 
     /**
-     * Converts the 3D system into a 2D system (projection)?
-     * @param figure_id : id of the figure.
-     * @return
+     * Create a matrix for rotating around the X-axis.
+     * @param angle : rotation angle
+     * @return : new matrix
      */
-    vector<Point2D*> PerspectiveProjection(int figure_id = 0);
-
-
-    tuple<uint, uint> CalculateImageProperties(int figure_id = 0);
+    Matrix rotateX(const double angle);
 
     /**
-     * Converts a list of 3D/2D Lines (z will be constant d) into an EasyImage with specifications from 'info'.
-     * @param figure_id : id of the figure.
-     * @return : resulting EasyImage
+     * Create a matrix for rotating around the Y-axis.
+     * @param angle : rotation angle
+     * @return : new matrix
      */
-    img::EasyImage LinesToImage(int figure_id = 0);
+    Matrix rotateY(const double angle);
 
     /**
-     * Processes the Line Drawing and generates an EasyImage.
-     * This function packs 'PointsToECS', 'PerspectiveProjection' and 'LinesToImage' into 1 easy-to-use function.
-     * @param figure_id : id of the figure.
-     * @return resulting EasyImage
+     * Create a matrix for rotating around the Z-axis.
+     * @param angle : rotation angle
+     * @return : new matrix
      */
-    img::EasyImage GenerateImage(int figure_id = 0);
+    Matrix rotateZ(const double angle);
+
+    /**
+     * Create a matrix for translating figures.
+     * @param vec : vector that describes the translation
+     * @return : new matrix
+     */
+    Matrix translate(const Vector3D &vec);
+
+    /**
+     * Apply a transformation to all points in a given figure.
+     * @param figure : Figure containing all the points
+     * @param matrix : Matrix describing the transformation
+     */
+    void applyTransformation(Figure& figure, const Matrix &matrix);
+
+    /**
+     * Apply a transformation to all points in all given figures.
+     * @param figures : Vector of figures containing all the figures
+     * @param matrix : Matrix describing the transformation
+     */
+    void applyTransformation(FiguresList3D& figures, const Matrix &matrix);
+
+    /**
+     * Create a matrix that describes the eye-point transformation
+     * @param eye : Eye point
+     * @return : new matrix
+     */
+    Matrix EyePointTransformation(const Vector3D &eye);
+
+    /**
+     * Project a 3D point on a face at distance d and return as a 2D point.
+     * @param point : 3D point to project
+     * @param d : distance
+     * @return : resulting 2D point
+     */
+    Point2D *doProjection(const Vector3D &point, const double d);
+
+    /**
+     * Project 3D figures on a 2D canvas.
+     * @param figures : list of 3D figures
+     * @return : list of 2D lines
+     */
+    LinesList2D doProjection(const FiguresList3D &figures);
 
     /**
      * Getter for 'info'.

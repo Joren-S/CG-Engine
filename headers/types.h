@@ -5,10 +5,11 @@
 #ifndef ENGINE_TYPES_H
 #define ENGINE_TYPES_H
 
+#include "../vector3d/vector3d.h"
 #include "list"
+#include "string"
+#include "vector"
 
-
-// Colors.
 
 class ColorRGB {
 public:
@@ -21,21 +22,7 @@ public:
     }
 };
 
-class ColorRGBA {
-public:
-    double r, g, b, a;
-
-    ColorRGBA(double _r, double _g, double _b, double _a) {
-        r = _r;
-        g = _g;
-        b = _b;
-        a = _a;
-    }
-};
-
-
-// Points.
-
+// 2D
 class Point2D {
 public:
     double x, y;
@@ -46,20 +33,6 @@ public:
     }
 };
 
-class Point3D {
-public:
-    double x, y, z;
-
-    Point3D(double _x, double _y, double _z) {
-        x = _x;
-        y = _y;
-        z = _z;
-    }
-};
-
-
-// Lines
-
 class Line2D {
 public:
     Point2D *start;
@@ -67,6 +40,7 @@ public:
     ColorRGB *color;
 
     Line2D(double x_start, double y_start, double x_end, double y_end) {
+
         start = new Point2D(x_start, y_start);
         end = new Point2D(x_end, y_end);
         ColorRGB(255, 255, 255);
@@ -79,30 +53,66 @@ public:
     }
 };
 
+struct LS2D_Properties {
+    std::string pathToFile;
+    ColorRGB *color;
+};
+
+
+// 3D
+
 class Line3D {
 public:
-    Point3D *start;
-    Point3D *end;
+    Vector3D start;
+    Vector3D end;
     ColorRGB *color;
 
-    Line3D(double x_start, double y_start, double z_start, double x_end, double y_end, double z_end) {
-        start = new Point3D(x_start, y_start, z_start);
-        end = new Point3D(x_end, y_end, z_end);
+    Line3D(const double x_start, const double y_start, const double z_start, const double x_end, const double y_end, const double z_end) {
+        start = Vector3D::point(x_start, y_start, z_start);
+        end = Vector3D::point(x_end, y_end, z_end);
         ColorRGB(255, 255, 255);
     }
 
-    Line3D(Point3D *_start, Point3D *_end) {
+    Line3D(Vector3D _start, Vector3D _end) {
         start = _start;
         end = _end;
         ColorRGB(255, 255, 255);
     }
 };
 
+class Face {
+public:
+    std::vector<int> point_indices;
+};
+
+class Figure {
+public:
+    std::vector<Vector3D> points;
+    std::vector<Face> faces;
+    ColorRGB color;
+};
+
+struct  LD3D_Properties {
+    std::string type;
+    double scale;
+    double rotateX;
+    double rotateY;
+    double rotateZ;
+    Vector3D center;
+
+    int nrPoints;
+    int nrLines;
+    std::vector<Vector3D> points;
+    std::vector<Line3D*> lines;
+    ColorRGB *color;
+};
+
 // typedefs
 
 typedef unsigned int uint;
-typedef std::list<Line2D*> LinesList2D;
-typedef std::list<Line3D*> LinesList3D;
+typedef std::vector<Line2D*> LinesList2D;
+typedef std::vector<Line3D> LinesList3D;
+typedef std::vector<Figure> FiguresList3D;
 
 
 #endif //ENGINE_TYPES_H

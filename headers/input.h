@@ -10,32 +10,12 @@
 #include <sstream>
 
 #include "../ini_configuration/ini_configuration.h"
+#include "../vector3d/vector3d.h"
 #include "types.h"
 
 using namespace std;
 
 enum ImageType { Invalid, LSys2D, LDraw3D };
-
-struct LS2D_Properties {
-    string pathToFile;
-    ColorRGB *color;
-};
-
-struct  LD3D_Properties {
-    string type;
-    double scale;
-    double rotateX;
-    double rotateY;
-    double rotateZ;
-    Point3D *center;
-    ColorRGB *color;
-    int nrPoints;
-    vector<Point3D*> points;
-    int nrLines;
-    vector<Line3D*> lines;
-};
-
-
 
 
 class ImageInfo {
@@ -49,9 +29,9 @@ private:
     LS2D_Properties *ls2dProperties;
 
     // LD3D
-    Point3D *eye;
+    Vector3D eye;
     int nrFigures;
-    vector<LD3D_Properties*> ld3DProperties; // Figures, basically
+    vector<LD3D_Properties*> Figures;
 
 public:
     ImageInfo(const ini::Configuration &config);
@@ -74,11 +54,11 @@ public:
 
     void setLS2DProperties(LS2D_Properties *prop);
 
-    vector<LD3D_Properties*> getLD3DProperties() const;
+    vector<LD3D_Properties*> getFigures() const;
 
-    Point3D *getEye() const;
+    Vector3D getEye() const;
 
-    void setEye(Point3D *eye);
+    void setEye(Vector3D eye);
 
     int getNrFigures() const;
 

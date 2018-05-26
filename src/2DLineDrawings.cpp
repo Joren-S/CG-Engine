@@ -16,8 +16,7 @@ img::EasyImage LineDrawing2D::LinesToImage(const LinesList2D &lines) {
 
     // Iterate over all 2DLines.
     bool firstItr = true;
-    std::list<Line2D*>::const_iterator itr;
-    for (itr = lines.begin(); itr != lines.end(); itr++) {
+    for (LinesList2D::const_iterator itr = lines.begin(); itr != lines.end(); itr++) {
         Line2D *cur_line = (*itr);
         Point2D *start = cur_line->start;
         Point2D *end = cur_line->end;

@@ -8,15 +8,16 @@
 using namespace std;
 
 ImageInfo::ImageInfo(const ini::Configuration &config) {
-    // General section
-    setType(StrToIT(config["General"]["type"].as_string_or_die()));
-    setSize(config["General"]["size"].as_int_or_die());
-    vector<double> bg_color = config["General"]["backgroundcolor"].as_double_tuple_or_die();
-    setBGColor(DoubleToRGB(&bg_color));
 
+    vector<double> bg_color;
+    setType(StrToIT(config["General"]["type"].as_string_or_die()));
+
+    // 2D L-System
     if (getType() == LSys2D) {
 
-        // 2DLSystem
+        setSize(config["General"]["size"].as_int_or_die());
+        bg_color = config["General"]["backgroundcolor"].as_double_tuple_or_die();
+        setBGColor(DoubleToRGB(&bg_color));
         LS2D_Properties *LS2D_Prop = new LS2D_Properties();
         vector<double> ls2d_color = config["2DLSystem"]["color"].as_double_tuple_or_die();
         LS2D_Prop->pathToFile = config["2DLSystem"]["inputfile"].as_string_or_die();
@@ -24,12 +25,15 @@ ImageInfo::ImageInfo(const ini::Configuration &config) {
         setLS2DProperties(LS2D_Prop);
     }
 
-
+    // 3D Line drawing
     if (getType() == LDraw3D) {
 
-        // 3D Line drawing / wireframe
+        setSize(config["General"]["size"].as_int_or_die());
+        bg_color = config["General"]["backgroundcolor"].as_double_tuple_or_die();
+        setBGColor(DoubleToRGB(&bg_color));
+
         vector<double> eye = config["General"]["eye"].as_double_tuple_or_die();
-        setEye(new Point3D(eye.at(0), eye.at(1), eye.at(2)));
+        setEye(Vector3D::point(eye.at(0), eye.at(1), eye.at(2)));
         setNrFigures(config["General"]["nrFigures"].as_int_or_die());
         for (uint i = 0; i < getNrFigures(); i++) {
             stringstream ss;
@@ -37,7 +41,7 @@ ImageInfo::ImageInfo(const ini::Configuration &config) {
             string section = ss.str();
 
             LD3D_Properties *LD3D_Prop = new LD3D_Properties();
-            ld3DProperties.push_back(LD3D_Prop);
+            Figures.push_back(LD3D_Prop);
 
             LD3D_Prop->type = config[section]["type"].as_string_or_die();
             LD3D_Prop->scale = config[section]["scale"].as_double_or_die();
@@ -47,7 +51,7 @@ ImageInfo::ImageInfo(const ini::Configuration &config) {
 
             vector<double> center = config[section]["center"].as_double_tuple_or_die();
             vector<double> ld3d_color = config[section]["color"].as_double_tuple_or_die();
-            LD3D_Prop->center = new Point3D(center.at(0), center.at(1), center.at(2));
+            LD3D_Prop->center = Vector3D::point(center.at(0), center.at(1), center.at(2));
             LD3D_Prop->color = DoubleToRGB(&ld3d_color);
 
             LD3D_Prop->nrPoints = config[section]["nrPoints"].as_int_or_die();
@@ -60,7 +64,7 @@ ImageInfo::ImageInfo(const ini::Configuration &config) {
                 string pointsection = ss.str();
 
                 vector<double> coord = config[section][pointsection].as_double_tuple_or_die();
-                LD3D_Prop->points.push_back(new Point3D(coord.at(0), coord.at(1), coord.at(2)));
+                LD3D_Prop->points.push_back(Vector3D::point(coord.at(0), coord.at(1), coord.at(2)));
             }
 
             for (uint nL = 0; nL < LD3D_Prop->nrLines; nL++) {
@@ -140,15 +144,15 @@ void ImageInfo::setLS2DProperties(LS2D_Properties *prop) {
 }
 
 
-vector<LD3D_Properties*> ImageInfo::getLD3DProperties() const {
-    return ld3DProperties;
+vector<LD3D_Properties*> ImageInfo::getFigures() const {
+    return Figures;
 }
 
-Point3D *ImageInfo::getEye() const {
+Vector3D ImageInfo::getEye() const {
     return eye;
 }
 
-void ImageInfo::setEye(Point3D *eye) {
+void ImageInfo::setEye(Vector3D eye) {
     ImageInfo::eye = eye;
 }
 
