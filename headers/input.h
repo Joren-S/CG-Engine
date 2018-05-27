@@ -29,9 +29,7 @@ private:
     LS2D_Properties *ls2dProperties;
 
     // LD3D
-    Vector3D eye;
-    int nrFigures;
-    vector<LD3D_Properties*> Figures;
+    LD3D_Properties *ld3DProperties;
 
 public:
     ImageInfo(const ini::Configuration &config);
@@ -54,15 +52,10 @@ public:
 
     void setLS2DProperties(LS2D_Properties *prop);
 
-    vector<LD3D_Properties*> getFigures() const;
+    LD3D_Properties *getLD3DProperties() const;
 
-    Vector3D getEye() const;
+    void setLD3DProperties(LD3D_Properties *prop);
 
-    void setEye(Vector3D eye);
-
-    int getNrFigures() const;
-
-    void setNrFigures(int nrFigures);
 
     // Help functions
 

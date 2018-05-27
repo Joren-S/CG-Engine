@@ -15,6 +15,11 @@ class ColorRGB {
 public:
     double r, g, b;
 
+    ColorRGB() {
+        r = 0;
+        g = 0;
+        b = 0;
+    }
     ColorRGB(double _r, double _g, double _b) {
         r = _r;
         g = _g;
@@ -87,31 +92,31 @@ public:
 
 class Figure {
 public:
-    std::vector<Vector3D> points;
-    std::vector<Face> faces;
-    ColorRGB color;
-};
-
-struct  LD3D_Properties {
     std::string type;
     double scale;
     double rotateX;
     double rotateY;
     double rotateZ;
     Vector3D center;
-
     int nrPoints;
     int nrLines;
     std::vector<Vector3D> points;
-    std::vector<Line3D*> lines;
-    ColorRGB *color;
+    std::vector<Face> faces;
+    ColorRGB color;
+
+};
+
+class LD3D_Properties {
+public:
+    Vector3D eye;
+    int nrFigures;
+    std::vector<Figure> Figures;
 };
 
 // typedefs
 
 typedef unsigned int uint;
 typedef std::vector<Line2D*> LinesList2D;
-typedef std::vector<Line3D> LinesList3D;
 typedef std::vector<Figure> FiguresList3D;
 
 

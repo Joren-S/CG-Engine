@@ -79,7 +79,9 @@ LinesList2D LSystem2D::ProcessLSystem() {
             if (l_system->draw(curChar)) {
                 // We check for illegal characters in BuildRule, so we can continue and find the next point
                 Point2D nextLocation = FindNextPoint(curLocation, curAngle, 1);
-                result.push_back(new Line2D(curLocation.x, curLocation.y, nextLocation.x, nextLocation.y));
+                Line2D *newline = new Line2D(curLocation.x, curLocation.y, nextLocation.x, nextLocation.y);
+                newline->color = getInfo()->getLS2DProperties()->color;
+                result.push_back(newline);
                 curLocation = nextLocation;
             }
         }

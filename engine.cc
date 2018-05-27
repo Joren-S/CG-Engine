@@ -58,8 +58,9 @@ int main(int argc, char const* argv[])
 {
     /* testing */
     argc = 2;
-    //argv[1] = "../examples/ld3d/line_drawings001.ini";
-    argv[1] = "../examples/ls2d/l_systems024.ini";
+    argv[1] = "../examples/ld3d/line_drawings002.ini";
+
+    //argv[1] = "../examples/ls2d/l_systems022.ini";
 
     /* end */
     int retVal = 0;

@@ -13,6 +13,7 @@
 #include <stack>
 #include <cmath>
 #include <list>
+#include <vector>
 
 // provided
 #include "../easy_image/easy_image.h"
@@ -38,6 +39,12 @@ public:
      * @param imgInfo : ImageInfo object containing specifications for the LSystem.
      */
     LineDrawing3D(const ImageInfo *imgInfo);
+
+    /**
+     * Gets all the faces and stores them in 'faces'.
+     * @param figure : Figure containing all the information needed
+     */
+    void determineFaces(Figure& figure);
 
     /**
      * Create a matrix for scaling figures.
@@ -82,13 +89,6 @@ public:
     void applyTransformation(Figure& figure, const Matrix &matrix);
 
     /**
-     * Apply a transformation to all points in all given figures.
-     * @param figures : Vector of figures containing all the figures
-     * @param matrix : Matrix describing the transformation
-     */
-    void applyTransformation(FiguresList3D& figures, const Matrix &matrix);
-
-    /**
      * Create a matrix that describes the eye-point transformation
      * @param eye : Eye point
      * @return : new matrix
@@ -108,7 +108,12 @@ public:
      * @param figures : list of 3D figures
      * @return : list of 2D lines
      */
-    LinesList2D doProjection(const FiguresList3D &figures);
+    LinesList2D doProjection(FiguresList3D &figures);
+
+    /**
+     * Generates an EasyImage.
+     */
+    img::EasyImage GenerateImage();
 
     /**
      * Getter for 'info'.

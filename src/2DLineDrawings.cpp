@@ -118,11 +118,6 @@ img::EasyImage LineDrawing2D::LinesToImage(const LinesList2D &lines) {
                           (uint8_t)(getInfo()->getBGColor()->g),
                           (uint8_t)(getInfo()->getBGColor()->b));
 
-    // Setup draw color
-    img::Color color((uint8_t)(getInfo()->getLS2DProperties()->color->r),
-                     (uint8_t)(getInfo()->getLS2DProperties()->color->g),
-                     (uint8_t)(getInfo()->getLS2DProperties()->color->b));
-
     // Setup image with correct dimensions and set correct background color.
     img::EasyImage image(image_x, image_y);
     image.clear(background);
@@ -132,6 +127,9 @@ img::EasyImage LineDrawing2D::LinesToImage(const LinesList2D &lines) {
         Line2D *curLine = *itr;
 
         // Draw line.
+        img::Color color((uint8_t) curLine->color->r,
+                         (uint8_t) curLine->color->g,
+                         (uint8_t) curLine->color->b);
         image.draw_line(curLine->start->x, curLine->start->y, curLine->end->x, curLine->end->y, color);
     }
 

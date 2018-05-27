@@ -52,20 +52,6 @@ Matrix LineDrawing3D::translate(const Vector3D &vec) {
     return Mt;
 }
 
-void LineDrawing3D::applyTransformation(Figure& figure, const Matrix &matrix) {
-
-    for (uint i = 0; i < figure.points.size(); i++) {
-        figure.points.at(i) *= matrix;
-    }
-}
-
-void LineDrawing3D::applyTransformation(FiguresList3D& figures, const Matrix &matrix) {
-
-    for (uint i = 0; i < figures.size(); i++) {
-        applyTransformation(figures.at(i), matrix);
-    }
-}
-
 Matrix LineDrawing3D::EyePointTransformation(const Vector3D &eye) {
 
     Matrix result;
@@ -73,7 +59,7 @@ Matrix LineDrawing3D::EyePointTransformation(const Vector3D &eye) {
     // setup eye vector and calculate angles
     double r = eye.length();
     double phi = acos(eye.z / r);
-    double theta = asin((eye.y / (r * sin(phi))));
+    double theta = atan2(eye.y, eye.x);
 
     // setup matrix and return
     result(1, 1) = -sin(theta);
@@ -90,6 +76,13 @@ Matrix LineDrawing3D::EyePointTransformation(const Vector3D &eye) {
 
 }
 
+void LineDrawing3D::applyTransformation(Figure& figure, const Matrix &matrix) {
+
+    for (uint i = 0; i < figure.points.size(); i++) {
+        figure.points.at(i) *= matrix;
+    }
+}
+
 Point2D *LineDrawing3D::doProjection(const Vector3D &point, const double d) {
     double _x = (d * point.x) / (-point.z);
     double _y = (d * point.y) / (-point.z);
@@ -97,10 +90,55 @@ Point2D *LineDrawing3D::doProjection(const Vector3D &point, const double d) {
     return result;
 }
 
-LinesList2D LineDrawing3D::doProjection(const FiguresList3D &figures) {
+LinesList2D LineDrawing3D::doProjection(FiguresList3D &figures) {
 
+    LinesList2D result;
+    Matrix EPT = EyePointTransformation(getInfo()->getLD3DProperties()->eye);
+
+    //cout << getInfo()->getLD3DProperties();
+    for (uint fid = 0; fid < getInfo()->getLD3DProperties()->nrFigures; fid++) {
+        Figure curFig = figures.at(fid);
+
+        // Convert points to eye-point system.
+        applyTransformation(curFig, EPT);
+
+        // Scale
+        Matrix S = scaleFigure(curFig.scale);
+        applyTransformation(curFig, S);
+
+        // Rotations
+        Matrix R = rotateX(curFig.rotateX) * rotateY(curFig.rotateY) * rotateZ(curFig.rotateZ);
+        applyTransformation(curFig, R);
+
+        // Translation
+        Matrix T = translate(Vector3D::vector(curFig.center));
+        applyTransformation(curFig, T);
+
+        // Project the coordinates for all lines.
+        double d = 1;
+        for (uint lid = 0; lid < curFig.nrLines; lid++) {
+            Face curF = curFig.faces.at(lid);
+            Vector3D curStart = curFig.points.at(curF.point_indices.at(0));
+            Vector3D curEnd = curFig.points.at(curF.point_indices.at(1));
+
+            Line2D *line = new Line2D( doProjection(curStart, 1), doProjection(curEnd, 1) );
+            line->color = new ColorRGB( curFig.color.r, curFig.color.g, curFig.color.b);
+            result.push_back(line);
+        }
+    }
+
+    return result;
 }
 
+img::EasyImage LineDrawing3D::GenerateImage() {
+
+    // Process system
+    LinesList2D Lines = doProjection(getInfo()->getLD3DProperties()->Figures);
+
+    // Convert to EasyImage and return
+    LineDrawing2D drawing(getInfo());
+    return drawing.LinesToImage(Lines);
+}
 
 const ImageInfo *LineDrawing3D::getInfo() const {
     return info;
